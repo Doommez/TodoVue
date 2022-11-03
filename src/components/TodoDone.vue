@@ -4,7 +4,6 @@
   <li v-for = "todoDone in arrayDone">
     <p>{{todoDone.todo}}</p>
     <p>{{todoDone.date}}</p>
-    <button>EDIT</button>
     <button>DONE</button>
     <button>DELETE</button>
   </li>
@@ -13,13 +12,10 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-defineProps({
+  defineProps({
   arrayDone:Array
 })
-const todosDone = ref([
-  {todo : "asdfsadf", id : 4, date : 134.1234}
-])
+
 </script>
 
 <style scoped>
@@ -39,7 +35,7 @@ const todosDone = ref([
   }
 
   li p{
-    max-width: 150px;
+    max-width: 200px;
     min-width: 105px;
   }
 

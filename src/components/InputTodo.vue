@@ -2,10 +2,15 @@
   import {ref} from 'vue'
   const textTask = ref("")
   const dateTask = ref("")
+  let isValid = ref(false)
 
   const emit = defineEmits(['create'])
 
   const onAddTask = () =>{
+    if (!!textTask.value == ""){
+     isValid.value = !isValid.value
+      return
+    }else isValid.value = false
     let  objTask  = {todo : textTask.value, date : dateTask.value}
     emit('create',objTask)
   }
@@ -29,15 +34,16 @@
       >
       <button @click.prevent = "onAddTask"
       >ADD </button>
-      <p>{{textTask}} {{dateTask}}</p>
     </form>
+    <p v-if="isValid"
+       class="errorValid">enter value</p>
   </div>
 
 </template>
 
 
 <style scoped>
-  input{
+  input {
     margin: 10px;
     border: none;
     border-bottom: solid 2px black;
@@ -45,5 +51,10 @@
     font-size: 1em;
     font-weight: 500;
     outline: none;
+    height: 40px;
+  }
+  .errorValid{
+    color: red;
+    font-size: 30px;
   }
 </style>

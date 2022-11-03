@@ -1,9 +1,11 @@
 <template>
   <ul class = "todolist">
     <li v-for = "todo in array" key="todo.id">
-      <p>{{todo.todo}}</p>
+      <textarea type="text"
+             :value="todo.todo"
+             @input="todo.todo = $event.target.value"/>
+<!--      <p>{{todo.todo}}</p>-->
       <p>{{todo.date}}</p>
-      <button class="purple">EDIT</button>
       <button class="red" @click="$emit('done',todo)">DONE</button>
       <button class="grey" @click="$emit('remove',todo)">DELETE</button>
     </li>
@@ -11,6 +13,7 @@
 </template>
 
 <script setup>
+
 defineProps({
   array:Array
 })
@@ -27,17 +30,28 @@ ul{
 li{
   padding: 0px;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start;
+}
+textarea{
+  display: block;
+  border:none;
+  outline: none;
+  resize: none;
+  justify-content: flex-start;
+  overflow: visible;
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  min-height: 100px;
 }
 li p{
-  max-width: 150px;
+  max-width: 200px;
   min-width: 105px;
 }
 ul button{
   max-width: 75px;
   max-width: 100px;
-
 }
 .red{
   color: deeppink;
