@@ -1,30 +1,40 @@
 <script setup>
-  import { ref } from 'vue'
-  const textTask = ref({value:""})
-  const dateTask = ref({value:""})
+  import {ref} from 'vue'
+  const textTask = ref("")
+  const dateTask = ref("")
+
+  const emit = defineEmits(['create'])
+
+  const onAddTask = () =>{
+    let  objTask  = {todo : textTask.value, date : dateTask.value}
+    emit('create',objTask)
+  }
+
 
 </script>
 
 <template>
+
   <h1>ToDo List</h1>
   <div class="todo__input">
     <form>
       <input type="text"
-             v-bind:value="textTask.value"
-             @input="textTask.value = $event.target.value"
+             v-bind:value = " textTask"
+             @input = " textTask = $event.target.value"
       >
-      <input type="date" name="date"
-             id="todo__input-date"
-             :value="dateTask.value"
-             @input="dateTask.value = $event.target.value"
+      <input type = "date" name = "date"
+             id = "todo__input-date"
+             :value = "dateTask"
+             @input = "dateTask = $event.target.value"
       >
-      <button @click.prevent="addTask"
+      <button @click.prevent = "onAddTask"
       >ADD </button>
-      <p>{{textTask.value}} {{dateTask.value}}</p>
+      <p>{{textTask}} {{dateTask}}</p>
     </form>
   </div>
 
 </template>
+
 
 <style scoped>
   input{
