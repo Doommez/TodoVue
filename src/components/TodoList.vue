@@ -1,4 +1,9 @@
 <template>
+  <div class="container-header">
+    <h2>Task</h2>
+    <h2>Action</h2>
+  </div>
+
   <ul class = "todolist">
     <li v-for = "todo in array" key="todo.id">
       <textarea type="text"
@@ -23,6 +28,10 @@ defineProps({
 </script>
 
 <style scoped>
+  .container-header{
+    display: flex;
+    justify-content: space-around;
+  }
 ul{
   list-style-type:none;
   padding: 0px;
@@ -31,6 +40,8 @@ li{
   padding: 0px;
   display: flex;
   align-items: flex-start;
+  margin: 10px 0px;
+  border-radius: 5px;
 }
 textarea{
   display: block;

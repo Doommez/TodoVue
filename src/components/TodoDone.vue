@@ -32,6 +32,9 @@
     position: relative;
     border-radius: 5px;
     opacity: 0.6;
+    margin: 10px 0px;
+    border: solid 1px grey;
+    border-radius: 5px;
   }
 
   li p{

@@ -7,7 +7,7 @@
   const emit = defineEmits(['create'])
 
   const onAddTask = () =>{
-    if (!!textTask.value == ""){
+    if (!!textTask.value == ""|| !!dateTask.value === ""){
      isValid.value = !isValid.value
       return
     }else isValid.value = false
