@@ -56,6 +56,5 @@
     top: 50%;
     left: 0px;
     background: #1a1a1a;
-
   }
 </style>

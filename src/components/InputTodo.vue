@@ -2,7 +2,7 @@
   import {ref} from 'vue'
   const textTask = ref("")
   const dateTask = ref("")
-  let isValid = ref(false)
+  const isValid = ref(false)
 
   const emit = defineEmits(['create'])
 
@@ -11,7 +11,7 @@
      isValid.value = !isValid.value
       return
     }else isValid.value = false
-    let  objTask  = {todo : textTask.value, date : dateTask.value}
+    let  objTask  = {todo : textTask.value, date : dateTask.value, completed: false}
     emit('create',objTask)
   }
 
@@ -20,8 +20,7 @@
 
 <template>
 
-  <h1>ToDo List</h1>
-  <div class="todo__input">
+
     <form>
       <input type="text"
              v-bind:value = " textTask"
@@ -37,7 +36,7 @@
     </form>
     <p v-if="isValid"
        class="errorValid">enter value</p>
-  </div>
+
 
 </template>
 
