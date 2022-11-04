@@ -1,5 +1,5 @@
 <script setup>
-  import {ref} from 'vue'
+  import {ref, computed} from 'vue'
   const textTask = ref("")
   const dateTask = ref("")
   const isValid = ref(false)
@@ -14,28 +14,28 @@
     let  objTask  = {todo : textTask.value, date : dateTask.value, completed: false}
     emit('create',objTask)
   }
-
-
 </script>
 
 <template>
-
-
-    <form>
-      <input type="text"
-             v-bind:value = " textTask"
-             @input = " textTask = $event.target.value"
-      >
-      <input type = "date" name = "date"
-             id = "todo__input-date"
-             :value = "dateTask"
-             @input = "dateTask = $event.target.value"
-      >
-      <button @click.prevent = "onAddTask"
-      >ADD </button>
-    </form>
-    <p v-if="isValid"
-       class="errorValid">enter value</p>
+<form>
+  <input type="text"
+         v-bind:value = "textTask"
+         @input = " textTask = $event.target.value"
+  >
+  <input type = "date"
+         name = "date"
+         id = "todo__input-date"
+         :value = "dateTask"
+         @input = "dateTask = $event.target.value"
+  >
+  <button
+          @click.prevent = "onAddTask"
+  >
+    ADD
+  </button>
+</form>
+<p v-if="isValid"
+   class="errorValid">enter value</p>
 
 
 </template>
