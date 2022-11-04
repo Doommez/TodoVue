@@ -1,59 +1,80 @@
+<template>
+  <div class="todo-creator">
+    <textarea type="text"
+              v-model="text"
+    />
+    <input type="date"
+           name="date"
+           id="todo__input-date"
+           v-model="data"
+    >
+    <button @click="onAddTask">
+      ADD
+    </button>
+    <p v-if="isValid"
+       class="todo-creator__error">enter value</p>
+  </div>
+</template>
 <script setup>
   import {ref, computed} from 'vue'
-  const textTask = ref("")
-  const dateTask = ref("")
+
+  const text = ref(null)
+  const data = ref(null)
   const isValid = ref(false)
 
   const emit = defineEmits(['create'])
-
-  const onAddTask = () =>{
-    if (!!textTask.value == ""|| !!dateTask.value === ""){
-     isValid.value = !isValid.value
+  const checkValid = () => {
+    if (text.value === null) {
+      isValid.value = true
+      return true
+    } else {
+      isValid.value = false
+      return false
+    }
+  }
+  const onAddTask = () => {
+    if (checkValid()) {
       return
-    }else isValid.value = false
-    let  objTask  = {todo : textTask.value, date : dateTask.value, completed: false}
-    emit('create',objTask)
+    }
+    let objTask = {todo: text.value, date: data.value, completed: false}
+    emit('create', objTask)
+    text.value = null;
+    data.value = null;
   }
 </script>
 
-<template>
-<form>
-  <input type="text"
-         v-bind:value = "textTask"
-         @input = " textTask = $event.target.value"
-  >
-  <input type = "date"
-         name = "date"
-         id = "todo__input-date"
-         :value = "dateTask"
-         @input = "dateTask = $event.target.value"
-  >
-  <button
-          @click.prevent = "onAddTask"
-  >
-    ADD
-  </button>
-</form>
-<p v-if="isValid"
-   class="errorValid">enter value</p>
 
+<style lang="scss" scoped>
+  .todo-creator {
+    display: flex;
+    align-items: baseline;
 
-</template>
+    textarea {
+      height: 20px;
+      resize: none;
+      margin: 10px;
+      padding: 0px;
+      border: none;
+      border-bottom: solid 2px black;
+      font-size: 1em;
+      font-weight: 500;
+      outline: none;
+    }
 
+    input {
+      margin: 10px;
+      border: none;
+      border-bottom: solid 2px black;
+      font-size: 1em;
+      font-weight: 500;
+      outline: none;
+    }
 
-<style scoped>
-  input {
-    margin: 10px;
-    border: none;
-    border-bottom: solid 2px black;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    outline: none;
-    height: 40px;
+    &__error {
+      color: red;
+      font-size: 20px;
+      flex-wrap: wrap;
+    }
   }
-  .errorValid{
-    color: red;
-    font-size: 30px;
-  }
+
 </style>

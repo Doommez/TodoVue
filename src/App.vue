@@ -1,79 +1,111 @@
+<template>
+  <div class="todo-title">Todo list</div>
+  <TodoCreate @create="createTodo"/>
+  <div class="todo-list">
+    <div class="todo-list__title">Task</div>
+    <div class="todo-list__title">Action</div>
+    <div
+      class="todo-list__loading"
+      v-if="!sortTodosArray"
+    >
+      LOADING...
+    </div>
+    <Items class="todo-list__item"
+           v-for="item in sortTodosArray"
+           :key="item.id"
+           :class="{'completed': item.completed}"
+           :item="item" @remove="deleteTask"/>
+  </div>
+</template>
+
 <script setup>
-import {onMounted, ref} from "vue"
-import TodoItem from './components/TodoItem.vue'
-import TodoCreate from "./components/TodoCreate.vue";
+  import {onMounted, ref, computed} from "vue"
+  import Items from './components/Items.vue'
+  import TodoCreate from "./components/TodoCreate.vue";
 
-  let todos = ref(
-    [
-      ]
-  )
+  let todos = ref(null)
 
-const fetchTodos = async () => {
-  const response = await fetch('https://dummyjson.com/todos')
-  let arrayTodos = await response.json()
-  return   arrayTodos.todos
-}
-
-onMounted( async () => {
-  const array = await fetchTodos()
-  const dateObj = new Date();
-  const month = dateObj.getUTCMonth() + 1;
-  const day = dateObj.getUTCDate();
-  const year = dateObj.getUTCFullYear();
-  array.sort((a,b) => {
-    if (!a.date){
-      a.date = `${day}.${month}.${year}`
-    }if (!b.date) b.date = `${day}.${month}.${year}`
-    return a.completed - b.completed
-  } )
-  todos.value=array
-})
-
-const createTodo = (todo) => {
-  const newarr = [...todos.value]
-  const lastId = newarr.sort((a,b) => b.id - a.id)[0].id;
-  const newTodo = {
-    ...todo,
-    id: lastId + 1
+  const fetchTodos = async () => {
+    const response = await fetch('https://dummyjson.com/todos')
+    const arrayTodos = await response.json()
+    todos.value = arrayTodos.todos
   }
-  todos.value.unshift(newTodo)
-  const newTodos = [...todos.value]
-  newTodos.sort((a,b) => a.completed - b.completed)
-  todos.value=newTodos
-}
 
-const deleteTask = (todo) =>{
-    todos.value = todos.value.filter((item) =>{
-      return item.id !== todo.id
+  const sortTodosArray = computed(() => {
+    const newSortTodoList = todos.value;
+    if (!newSortTodoList) {
+      return newSortTodoList
+    }
+    const dateObj = new Date();
+    const month = dateObj.getUTCMonth() + 1;
+    const day = dateObj.getUTCDate();
+    const year = dateObj.getUTCFullYear();
+    return newSortTodoList.sort((a, b) => {
+      if (!a.date) {
+        a.date = `${day}.${month}.${year}`
+      }
+      if (!b.date) {
+        b.date = `${day}.${month}.${year}`
+      }
+      return a.completed - b.completed
     })
-}
+  })
+
+  onMounted(() => {
+    fetchTodos()
+  })
+
+  const getMaxId = () => {
+    const lastId = todos.value.sort((a, b) => b.id - a.id)[0].id;
+    return lastId
+  }
+
+  const createTodo = (todo) => {
+    const newTodo = {
+      ...todo,
+      id: getMaxId() + 1
+    }
+    todos.value.unshift(newTodo)
+  }
+
+  const deleteTask = (todo) => {
+    let positionDelTodo = todos.value.indexOf(todo);
+    if (positionDelTodo >= 0) {
+      todos.value.splice(positionDelTodo, 1)
+    }
+  }
 
 </script>
 
-<template>
-  <h1>ToDo List</h1>
-  <div class="todo__input">
-    <TodoCreate  @create = "createTodo" />
-  </div>
-    <div class="container-header">
-      <h2>Task</h2>
-      <h2>Action</h2>
-    </div>
-    <ul class = "todolist">
-      <TodoItem :todos = "todos" @remove = "deleteTask"/>
-    </ul>
-
-
-</template>
 
 <style lang="scss" scoped>
-.container-header {
-  display: flex;
-  justify-content: space-around;
-}
-ul{
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-}
+  .todo-title {
+    font-size: 38px;
+    font-weight: bold;
+  }
+
+  .todo-list {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    align-items: center;
+
+    &__title {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    &__loading {
+      font-weight: bold;
+      grid-column: 1/2;
+    }
+
+    &__item {
+      grid-column: 1/3;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+  }
 </style>
