@@ -10,18 +10,19 @@
     >
       LOADING...
     </div>
-    <Items class="todo-list__item"
-           v-for="item in sortTodosArray"
-           :key="item.id"
-           :class="{'completed': item.completed}"
-           :item="item" @remove="deleteTask"/>
+    <TodoItem class="todo-list__item"
+              v-for="item in sortTodosArray"
+              :key="item.id"
+              :class="{'completed': item.completed}"
+              :item="item"
+              @remove="deleteTask"/>
   </div>
 </template>
 
 <script setup>
   import {onMounted, ref, computed} from "vue"
-  import Items from './components/Items.vue'
   import TodoCreate from "./components/TodoCreate.vue";
+  import TodoItem from "./components/TodoItem.vue";
 
   let todos = ref(null)
 
@@ -42,10 +43,10 @@
     const year = dateObj.getUTCFullYear();
     return newSortTodoList.sort((a, b) => {
       if (!a.date) {
-        a.date = `${day}.${month}.${year}`
+        a.date = `${year}-${month}-${day > 10 ? day : "0" + day}`
       }
       if (!b.date) {
-        b.date = `${day}.${month}.${year}`
+        b.date = `${year}-${month}-${day > 10 ? day : "0" + day}`
       }
       return a.completed - b.completed
     })

@@ -11,18 +11,22 @@
     <button @click="onAddTask">
       ADD
     </button>
-    <p v-if="isValid"
-       class="todo-creator__error">enter value</p>
+    <div v-if="isValid"
+       class="todo-creator__error"
+    >
+      enter value
+    </div>
   </div>
 </template>
 <script setup>
-  import {ref, computed} from 'vue'
+  import {ref} from 'vue'
 
   const text = ref(null)
   const data = ref(null)
   const isValid = ref(false)
 
   const emit = defineEmits(['create'])
+
   const checkValid = () => {
     if (text.value === null) {
       isValid.value = true
@@ -42,7 +46,6 @@
     data.value = null;
   }
 </script>
-
 
 <style lang="scss" scoped>
   .todo-creator {
@@ -73,7 +76,6 @@
     &__error {
       color: red;
       font-size: 20px;
-      flex-wrap: wrap;
     }
   }
 
