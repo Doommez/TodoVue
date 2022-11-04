@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
       <textarea type="text"
                 v-model="item.todo"
       />
