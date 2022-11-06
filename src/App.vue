@@ -29,7 +29,7 @@
   const fetchTodos = async () => {
     const response = await fetch('https://dummyjson.com/todos')
     const arrayTodos = await response.json()
-    todos.value = arrayTodos.todos
+    return arrayTodos.todos
   }
 
   const sortTodosArray = computed(() => {
@@ -54,6 +54,7 @@
 
   onMounted(() => {
     fetchTodos()
+      .then(result => todos.value = result)
   })
 
   const getMaxId = () => {

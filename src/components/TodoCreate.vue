@@ -12,7 +12,7 @@
       ADD
     </button>
     <div v-if="isValid"
-       class="todo-creator__error"
+         class="todo-creator__error"
     >
       enter value
     </div>
