@@ -6,7 +6,7 @@
     <input type="date"
            name="date"
            id="todo__input-date"
-           v-model="data"
+           v-model="date"
     >
     <button @click="onAddTask">
       ADD
@@ -22,7 +22,7 @@
   import {ref} from 'vue'
 
   const text = ref(null)
-  const data = ref(null)
+  const date = ref(null)
   const isValid = ref(false)
 
   const emit = defineEmits(['create'])
@@ -42,12 +42,12 @@
     }
     const objTask = {
       todo: text.value,
-      date: data.value,
+      date: date.value,
       completed: false
     }
     emit('create', objTask)
     text.value = null;
-    data.value = null;
+    date.value = null;
   }
 </script>
 
