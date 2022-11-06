@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup>
-  import {ref} from 'vue'
+  import {ref, defineEmits} from 'vue'
 
   const text = ref(null)
   const date = ref(null)

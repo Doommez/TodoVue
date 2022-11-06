@@ -4,21 +4,22 @@
                 v-model="item.todo"
       />
     <p>{{ item.date }}</p>
-    <button @click="selectCurrentTodo(item)">DONE</button>
-    <button @click="$emit('remove',item)">DELETE</button>
+    <button @click="$emit('changeCompleted', item)">DONE</button>
+    <button @click="$emit('remove', item)">DELETE</button>
   </div>
 </template>
 
 <script setup>
-  const emit = defineEmits(['remove'])
+  import {defineEmits, defineProps} from 'vue'
+
+  const emit = defineEmits([
+    'remove',
+    'changeCompleted'
+  ])
 
   defineProps({
     item: Object
   })
-
-  const selectCurrentTodo = (item) => {
-    item.completed = true
-  }
 
 </script>
 

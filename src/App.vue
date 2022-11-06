@@ -15,6 +15,7 @@
               :key="item.id"
               :class="{'completed': item.completed}"
               :item="item"
+              @changeCompleted="changeCurrentTodoCompleted"
               @remove="deleteTask"/>
   </div>
 </template>
@@ -68,6 +69,10 @@
       id: getMaxId() + 1
     }
     todos.value.unshift(newTodo)
+  }
+
+  const changeCurrentTodoCompleted = (todo) => {
+    todo.completed = true
   }
 
   const deleteTask = (todo) => {
