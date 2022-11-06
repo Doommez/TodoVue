@@ -40,7 +40,11 @@
     if (checkValid()) {
       return
     }
-    let objTask = {todo: text.value, date: data.value, completed: false}
+    const objTask = {
+      todo: text.value,
+      date: data.value,
+      completed: false
+    }
     emit('create', objTask)
     text.value = null;
     data.value = null;
