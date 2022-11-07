@@ -34,10 +34,10 @@
   }
 
   const sortTodosArray = computed(() => {
-    const newSortTodoList = todos.value;
-    if (!newSortTodoList) {
-      return newSortTodoList
+    if (!todos.value) {
+      return todos.value
     }
+    const newSortTodoList = [...todos.value];
     const dateObj = new Date();
     const month = dateObj.getUTCMonth() + 1;
     const day = dateObj.getUTCDate();
