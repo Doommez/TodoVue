@@ -93,7 +93,9 @@
 
   const deleteTask = (id) => {
     const indexTodo = todos.value.findIndex(todo => todo.id === id)
-    todos.value.splice(indexTodo, 1)
+    if (indexTodo !== -1) {
+      todos.value.splice(indexTodo, 1)
+    }
   }
 
 </script>
