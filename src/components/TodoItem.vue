@@ -1,31 +1,48 @@
 <template>
   <div>
-      <textarea type="text"
-                v-model="item.todo"
+      <textarea
+        v-model="todoBody"
+        type="text"
       />
-    <p>{{ item.date }}</p>
-    <button @click="$emit('changeCompleted', item)">DONE</button>
-    <button @click="$emit('remove', item)">DELETE</button>
+    <div>
+      {{ date }}
+    </div>
+    <div>
+      <button @click="changeCompleted">
+        DONE
+      </button>
+      <button @click="$emit('remove', id)">
+        DELETE
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-  const emit = defineEmits([
+  import {toRefs} from "vue";
+
+  defineEmits([
     'remove',
-    'changeCompleted'
   ])
 
-  defineProps({
-    item: Object
+  const props = defineProps({
+    todo: {
+      type: Object,
+      required: true,
+    }
   })
 
-</script>
+  const {todo: todoBody, date, completed, id} = toRefs(props.todo)
 
+  const changeCompleted = () => {
+    completed.value = !completed.value
+  }
+
+</script>
 
 <style lang="scss" scoped>
   .todo-list__item {
     textarea {
-      grid-row: 1/3;
       border: none;
       outline: none;
       resize: none;
@@ -40,9 +57,6 @@
     button {
       max-width: 200px;
       min-width: 105px;
-    }
-
-    button {
       border: solid 1px silver;
     }
 
@@ -60,7 +74,7 @@
         display: block;
         width: 100%;
         height: 5px;
-        top: 20%;
+        top: 35%;
         left: 0px;
         background: #1a1a1a;
       }

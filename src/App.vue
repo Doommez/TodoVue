@@ -1,66 +1,86 @@
 <template>
-  <div class="todo-title">Todo list</div>
-  <TodoCreate @create="createTodo"/>
-  <div class="todo-list">
-    <div class="todo-list__title">Task</div>
-    <div class="todo-list__title">Action</div>
-    <div
-      class="todo-list__loading"
-      v-if="!sortTodosArray"
-    >
-      LOADING...
+  <div class="todo">
+    <div class="todo-title">
+      Todo list
     </div>
-    <TodoItem class="todo-list__item"
-              v-for="item in sortTodosArray"
-              :key="item.id"
-              :class="{'completed': item.completed}"
-              :item="item"
-              @changeCompleted="changeCurrentTodoCompleted"
-              @remove="deleteTask"/>
+    <todo-create @create="createTodo"/>
+    <div class="todo-list grid">
+      <div class="grid__row grid__row__head">
+        <div>
+          Task
+        </div>
+        <div></div>
+        <div>
+          Action
+        </div>
+      </div>
+      <div
+        v-if="sortedTodosArray.length <= 0"
+        class="todo-list__loading"
+      >
+        LOADING...
+      </div>
+      <todo-item
+        v-for="todo in sortedTodosArray"
+        :key="todo.id"
+        class="todo-list__item grid__row"
+        :todo="todo"
+        :class="{'completed': todo.completed}"
+        @remove="deleteTask"/>
+    </div>
   </div>
 </template>
 
 <script setup>
-  import {onMounted, ref, computed} from "vue"
+  import {onMounted, ref, computed} from "vue";
   import TodoCreate from "./components/TodoCreate.vue";
   import TodoItem from "./components/TodoItem.vue";
 
-  let todos = ref(null)
+  const todos = ref([])
 
   const fetchTodos = async () => {
-    const response = await fetch('https://dummyjson.com/todos')
-    const arrayTodos = await response.json()
-    return arrayTodos.todos
+    return (await fetch('https://dummyjson.com/todos')).json()
   }
 
-  const sortTodosArray = computed(() => {
-    if (!todos.value) {
-      return todos.value
-    }
-    const newSortTodoList = [...todos.value];
+  const mappingDateFetchTodos = (todosArray) => {
     const dateObj = new Date();
     const month = dateObj.getUTCMonth() + 1;
     const day = dateObj.getUTCDate();
     const year = dateObj.getUTCFullYear();
-    return newSortTodoList.sort((a, b) => {
-      if (!a.date) {
-        a.date = `${year}-${month}-${day > 10 ? day : "0" + day}`
+    todosArray.forEach(todo => {
+      if (!todo.date) {
+        todo.date = `${year}-${month}-${day > 10 ? day : "0" + day}`
       }
-      if (!b.date) {
-        b.date = `${year}-${month}-${day > 10 ? day : "0" + day}`
-      }
-      return a.completed - b.completed
     })
+  }
+
+  const sortedTodosArray = computed(() => {
+    if (todos.value.length !== 0) {
+      const newSortTodoList = [...todos.value];
+      return newSortTodoList.sort((firstTodo, secondTodo) => {
+        if (firstTodo.completed < secondTodo.completed) {
+          return -1
+        }
+        if (firstTodo.completed > secondTodo.completed) {
+          return 1
+        }
+        return 0
+      })
+    }
+    return todos.value
   })
 
-  onMounted(() => {
-    fetchTodos()
-      .then(result => todos.value = result)
+  onMounted(async () => {
+    todos.value = (await fetchTodos()).todos;
+    mappingDateFetchTodos(todos.value)
   })
 
   const getMaxId = () => {
-    const lastId = todos.value.sort((a, b) => b.id - a.id)[0].id;
-    return lastId
+    const idexesArray = [];
+    todos.value.forEach(todo => {
+      idexesArray.push(todo.id)
+    })
+    return Math.max(...idexesArray)
   }
 
   const createTodo = (todo) => {
@@ -71,19 +91,12 @@
     todos.value.unshift(newTodo)
   }
 
-  const changeCurrentTodoCompleted = (todo) => {
-    todo.completed = true
-  }
-
-  const deleteTask = (todo) => {
-    let positionDelTodo = todos.value.indexOf(todo);
-    if (positionDelTodo >= 0) {
-      todos.value.splice(positionDelTodo, 1)
-    }
+  const deleteTask = (id) => {
+    const indexTodo = todos.value.findIndex(todo => todo.id === id)
+    todos.value.splice(indexTodo, 1)
   }
 
 </script>
-
 
 <style lang="scss" scoped>
   .todo-title {
@@ -92,27 +105,25 @@
   }
 
   .todo-list {
+    margin-top: 15px;
+  }
+
+  .grid {
     display: grid;
-    grid-template-columns: 2fr 2fr;
-    grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
-    align-items: center;
 
-    &__title {
-      font-size: 28px;
-      font-weight: bold;
-    }
+    &__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr;
+      align-items: center;
+      justify-items: center;
+      gap: 30px;
 
-    &__loading {
-      font-weight: bold;
-      grid-column: 1/2;
-    }
-
-    &__item {
-      grid-column: 1/3;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      &__head {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
     }
   }
 </style>
