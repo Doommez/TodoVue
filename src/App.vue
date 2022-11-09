@@ -3,7 +3,7 @@
     <div class="todo-title">
       Todo list
     </div>
-    <todo-create @create="createTodo"/>
+    <todo-create @create="createTodo"></todo-create>
     <div class="todo-list grid">
       <div class="grid__row grid__row__head">
         <div>
@@ -26,7 +26,7 @@
         class="todo-list__item grid__row"
         :todo="todo"
         :class="{'completed': todo.completed}"
-        @remove="deleteTask"/>
+        @remove="deleteTask"></todo-item>
     </div>
   </div>
 </template>
